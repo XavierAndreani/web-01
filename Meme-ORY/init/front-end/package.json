@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "colors": "^1.4.0"
   },
   "name": "xavierandreani-meme-ory",
@@ -7,10 +8,17 @@
   "description": "A memory game based on memes ¯\\(ツ)\\/¯.",
   "main": "\\",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "@expo/webpack-config": "^19.0.1",
+    "css-loader": "^6.10.0",
+    "html-webpack-plugin": "^5.6.0",
+    "style-loader": "^3.3.4",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
   },
   "scripts": {
-    "start": "http-server -c-1",
+    "build": "webpack build --mode=production --no-devtool",
+    "start": "webpack serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

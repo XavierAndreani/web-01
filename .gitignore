@@ -1,4 +1,5 @@
-./node_modules
+/node_modules
+/web-01/Meme-ORY/init/front-end/node_modules
 /test/js
 /test/browsertest/js
 /test/fixtures/temp-*
