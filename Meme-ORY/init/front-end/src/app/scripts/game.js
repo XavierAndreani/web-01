@@ -12,9 +12,11 @@ import card7 from "/src/assets/cards/card-7.png";
 import card8 from "/src/assets/cards/card-8.png";
 import card9 from "/src/assets/cards/card-9.png";
 
+import { Component } from "./component";
+
 import { parseUrl } from "./utils";
 
-var CARDS_IMAGE = [
+let CARDS_IMAGE = [
   back,
   card0,
   card1,
@@ -27,7 +29,7 @@ var CARDS_IMAGE = [
   card8,
   card9,
 ];
-var CARD_TEMPLATE = ""
+let CARD_TEMPLATE = ""
   .concat('<main class="card-cmp">')
   .concat('  <div class="card-wrapper">')
   .concat('    <img class="card front-face" alt="card" />')
@@ -36,7 +38,7 @@ var CARD_TEMPLATE = ""
   .concat("</main>");
 
 // TODO #export-functions: remove the IIFE
-  var environment = {
+  let environment = {
     api: {
       host: "http://localhost:8081",
     },
@@ -46,14 +48,12 @@ var CARD_TEMPLATE = ""
   // TODO #class: use the ES6 class keyword
   // TODO #extends: extend Component
   /* class GameComponent constructor */
-  export class GameComponent {
-    constructor(name) {
-      this.name = name;
-
-
+  export class GameComponent extends Component{
+    constructor() {
+      super(template)
       // TODO #extends: call super(template)
       // gather parameters from URL
-      var params = parseUrl();
+      let params = parseUrl();
 
       // TODO #import-html: assign template to this.template
       this.template = template;
@@ -63,90 +63,89 @@ var CARD_TEMPLATE = ""
       this._flippedCard = null;
       this._matchedPairs = 0;
     }
-  }
+
 
   // TODO #export-functions: remove this line
   // put component in global scope, to be runnable right from the HTML.
 
   // TODO #class: turn function into a method of GameComponent
   /* method GameComponent.init */
-  GameComponent.prototype.init = function init() {
+
+  init() {
     // fetch the cards configuration from the server
     this.fetchConfig(
-      // TODO #arrow-function: use arrow function instead.
-      function (config) {
-        this._config = config;
-        this._boardElement = document.querySelector(".cards");
+        // TODO #arrow-function: use arrow function instead.
+        function (config) {
+          this._config = config;
+          this._boardElement = document.querySelector(".cards");
 
-        // create cards out of the config
-        this._cards = [];
-        // TODO #functional-programming: use Array.map() instead.
-        for (var i in this._config.ids) {
-          this._cards[i] = new CardComponent(this._config.ids[i]);
-        }
+          // create cards out of the config
+          this._cards = [];
+          // TODO #functional-programming: use Array.map() instead.
+          for (let i in this._config.ids) {
+            this._cards[i] = new CardComponent(this._config.ids[i]);
+          }
 
-        // TODO #functional-programming: use Array.forEach() instead.
-        // TODO #let-const: replace var with let.
-        for (var i in this._cards) {
-          var card = this._cards[i];
+          // TODO #functional-programming: use Array.forEach() instead.
+          // TODO #let-const: replace var with let.
+          for (let i in this._cards) {
+            let card = this._cards[i];
 
-          // TODO #let-const: extract function _appendCard (ie: copy its body here and remove the function)
-          this._appendCard(card);
-        }
+            // TODO #let-const: extract function _appendCard (ie: copy its body here and remove the function)
+              this._boardElement.appendChild(card.getElement());
+              card.getElement().addEventListener(
+                  "click",
+                  // TODO #arrow-function: use arrow function instead.
+                  function () {
+                      this._flipCard(card);
+                  }.bind(this)
+              )
 
-        this.start();
-      }.bind(this)
+          }
+
+          this.start();
+        }.bind(this)
     );
   };
+
   // TODO #class: turn function into a method of GameComponent
 
   /* method GameComponent._appendCard */
-  GameComponent.prototype._appendCard = function _appendCard(card) {
-    this._boardElement.appendChild(card.getElement());
-
-    card.getElement().addEventListener(
-      "click",
-      // TODO #arrow-function: use arrow function instead.
-      function () {
-        this._flipCard(card);
-      }.bind(this)
-    );
-  };
 
   // TODO #class: turn function into a method of GameComponent
   /* method GameComponent.start */
-  GameComponent.prototype.start = function start() {
+  start() {
     this._startTime = Date.now();
-    var seconds = 0;
+    let seconds = 0;
     // TODO #template-literals:  use template literals (backquotes)
     document.querySelector("nav .navbar-title").textContent = "Player: " + this._name + ". Elapsed time: " + seconds++;
 
     this._timer = setInterval(
-      // TODO #arrow-function: use arrow function instead.
-      function () {
-        // TODO #template-literals:  use template literals (backquotes)
-        document.querySelector("nav .navbar-title").textContent =
-          "Player: " + this._name + ". Elapsed time: " + seconds++;
-      }.bind(this),
-      1000
+        // TODO #arrow-function: use arrow function instead.
+        function () {
+          // TODO #template-literals:  use template literals (backquotes)
+          document.querySelector("nav .navbar-title").textContent =
+              "Player: " + this._name + ". Elapsed time: " + seconds++;
+        }.bind(this),
+        1000
     );
   };
 
   // TODO #class: turn function into a method of GameComponent
   /* method GameComponent.fetchConfig */
-  GameComponent.prototype.fetchConfig = function fetchConfig(cb) {
-    var xhr =
-      typeof XMLHttpRequest != "undefined"
-        ? new XMLHttpRequest()
-        : new ActiveXObject("Microsoft.XMLHTTP");
+  fetchConfig(cb) {
+    let xhr =
+        typeof XMLHttpRequest != "undefined"
+            ? new XMLHttpRequest()
+            : new ActiveXObject("Microsoft.XMLHTTP");
 
     // TODO #template-literals:  use template literals (backquotes)
     xhr.open("get", environment.api.host + "/board?size=" + this._size, true);
 
     // TODO #arrow-function: use arrow function instead.
     xhr.onreadystatechange = function () {
-      var status;
-      var data;
+      let status;
+      let data;
       // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
       if (xhr.readyState == 4) {
         // `DONE`
@@ -164,34 +163,34 @@ var CARD_TEMPLATE = ""
 
   // TODO #class: turn function into a method of GameComponent
   /* method GameComponent.goToScore */
-  GameComponent.prototype.goToScore = function goToScore() {
-    var timeElapsedInSeconds = Math.floor(
-      (Date.now() - this._startTime) / 1000
+  goToScore() {
+    let timeElapsedInSeconds = Math.floor(
+        (Date.now() - this._startTime) / 1000
     );
     clearInterval(this._timer);
 
     setTimeout(
-      // TODO #arrow-function: use arrow function instead.
-      function () {
-        // TODO #spa: replace with './#score'
-        var scorePage = "./#score";
-        // TODO #template-literals:  use template literals (backquotes)
-        window.location =
-          scorePage +
-          "?name=" +
-          this._name +
-          "&size=" +
-          this._size +
-          "&time=" +
-          timeElapsedInSeconds;
-      }.bind(this),
-      750
+        // TODO #arrow-function: use arrow function instead.
+        function () {
+          // TODO #spa: replace with './#score'
+          let scorePage = "./#score";
+          // TODO #template-literals:  use template literals (backquotes)
+          window.location =
+              scorePage +
+              "?name=" +
+              this._name +
+              "&size=" +
+              this._size +
+              "&time=" +
+              timeElapsedInSeconds;
+        }.bind(this),
+        750
     );
   };
 
   // TODO #class: turn function into a method of GameComponent
   /* method GameComponent._flipCard */
-  GameComponent.prototype._flipCard = function _flipCard(card) {
+ _flipCard(card) {
     if (this._busy) {
       return;
     }
@@ -228,21 +227,23 @@ var CARD_TEMPLATE = ""
         // cards did not match
         // wait a short amount of time before hiding both cards
         setTimeout(
-          // TODO #arrow-function: use arrow function instead.
-          function () {
-            // hide the cards
-            this._flippedCard.flip();
-            card.flip();
-            this._busy = false;
+            // TODO #arrow-function: use arrow function instead.
+            function () {
+              // hide the cards
+              this._flippedCard.flip();
+              card.flip();
+              this._busy = false;
 
-            // reset flipped card for the next turn.
-            this._flippedCard = null;
-          }.bind(this),
-          500
+              // reset flipped card for the next turn.
+              this._flippedCard = null;
+            }.bind(this),
+            500
         );
       }
     }
-  };
+  }
+}
+  ;
 
   // TODO #card-component: Change images location to /app/components/game/card/assets/***.png
   // TODO #import-assets: use ES default import to import images.
@@ -252,8 +253,9 @@ var CARD_TEMPLATE = ""
   // TODO #class: use the ES6 class keyword
   // TODO #extends: extends Component
   /* class CardComponent constructor */
-  class CardComponent {
+  class CardComponent extends Component{
     constructor(id){
+        super(template);
       this.id=id;
       // TODO #extends: call super(CARD_TEMPLATE)
       // is this card flipped?
@@ -274,33 +276,30 @@ var CARD_TEMPLATE = ""
       this._imageElt.querySelector("img.back-face").src = CARDS_IMAGE[0];
 
   }
-}
+
 
   /* method CardComponent.getElement */
-  CardComponent.prototype.getElement = function getElement() {
+getElement() {
     return this._elt;
   };
 
   // TODO #class: turn function into a method of CardComponent
   /* method CardComponent.flip */
-  CardComponent.prototype.flip = function flip() {
+flip() {
     this._imageElt.classList.toggle("flip");
     this._flipped = !this._flipped;
   };
 
   // TODO #class: turn function into a method of CardComponent
   /* method CardComponent.equals */
-  CardComponent.prototype.equals = function equals(card) {
+equals(card) {
     return card._id === this._id;
   };
 
   // TODO #class: turn function into a method of CardComponent
   /* CardComponent.get flipped() */
-  Object.defineProperties(CardComponent.prototype, {
-    flipped: {
-      get: function () {
+      get prop() {
         return this._flipped;
-      },
-    },
-  });
+      }
+}
 ;
