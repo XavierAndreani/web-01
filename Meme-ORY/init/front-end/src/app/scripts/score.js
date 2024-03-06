@@ -9,7 +9,7 @@ import template from "../views/score.html";
 import { parseUrl } from "./utils";
   export function ScoreComponent() {
     // TODO #extends: call super(template)
-    var params = parseUrl();
+    let params = parseUrl();
     // TODO #import-html: assign template to this.template
     this.template=template;
     this.name = params.name;
@@ -27,4 +27,4 @@ import { parseUrl } from "./utils";
     document.getElementById("size").innerText = this.size;
     document.getElementById("time").innerText = this.time;
   };
-;
+
