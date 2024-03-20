@@ -1,41 +1,13 @@
-// TODO #import-html: use ES default imports to import game.html as template
-import template from "../views/game.html";
-import back from "/src/assets/cards/back.png";
-import card0 from "/src/assets/cards/card-0.png";
-import card1 from "/src/assets/cards/card-1.png";
-import card2 from "/src/assets/cards/card-2.png";
-import card3 from "/src/assets/cards/card-3.png";
-import card4 from "/src/assets/cards/card-4.png";
-import card5 from "/src/assets/cards/card-5.png";
-import card6 from "/src/assets/cards/card-6.png";
-import card7 from "/src/assets/cards/card-7.png";
-import card8 from "/src/assets/cards/card-8.png";
-import card9 from "/src/assets/cards/card-9.png";
+// TODO #import-html: use ES default imports to import game.component.html as template
+import template from "./game.component.html";
 
-import { Component } from "./component";
 
-import { parseUrl } from "./utils";
+import { Component } from "../../scripts/component";
+import { CardComponent } from "./card/card.component";
+import "./game.component.css";
 
-let CARDS_IMAGE = [
-  back,
-  card0,
-  card1,
-  card2,
-  card3,
-  card4,
-  card5,
-  card6,
-  card7,
-  card8,
-  card9,
-];
-let CARD_TEMPLATE = ""
-  .concat('<main class="card-cmp">')
-  .concat('  <div class="card-wrapper">')
-  .concat('    <img class="card front-face" alt="card" />')
-  .concat('    <img class="card back-face" alt="card" />')
-  .concat("  </div>")
-  .concat("</main>");
+
+import { parseUrl } from "../../scripts/utils";
 
 // TODO #export-functions: remove the IIFE
   let environment = {
@@ -47,7 +19,7 @@ let CARD_TEMPLATE = ""
   // TODO #export-functions: export function GameComponent
   // TODO #class: use the ES6 class keyword
   // TODO #extends: extend Component
-  /* class GameComponent constructor */
+
   export class GameComponent extends Component{
     constructor() {
       super(template)
@@ -56,7 +28,6 @@ let CARD_TEMPLATE = ""
       let params = parseUrl();
 
       // TODO #import-html: assign template to this.template
-      this.template = template;
       // save player name & game ize
       this._name = params.name;
       this._size = parseInt(params.size) || 9;
@@ -209,53 +180,5 @@ let CARD_TEMPLATE = ""
   // TODO #class: use the ES6 class keyword
   // TODO #extends: extends Component
   /* class CardComponent constructor */
-  class CardComponent extends Component{
-    constructor(id){
-        super(template);
-      this.id=id;
-      // TODO #extends: call super(CARD_TEMPLATE)
-      // is this card flipped?
-      this._flipped = false;
-      this.template = CARD_TEMPLATE;
-
-      // has the matching card has been discovered already?
-      this.matched = false;
-
-      this._elt = document.createElement("div");
-      this._elt.innerHTML = this.template;
-      this._elt = this._elt.firstElementChild;
-      this._id = id;
-
-      this._imageElt = this.getElement().querySelector(".card-wrapper");
-      this._imageElt.querySelector("img.front-face").src =
-          CARDS_IMAGE[this._id + 1];
-      this._imageElt.querySelector("img.back-face").src = CARDS_IMAGE[0];
-
-  }
 
 
-  /* method CardComponent.getElement */
-getElement() {
-    return this._elt;
-  };
-
-  // TODO #class: turn function into a method of CardComponent
-  /* method CardComponent.flip */
-flip() {
-    this._imageElt.classList.toggle("flip");
-    this._flipped = !this._flipped;
-  };
-
-  // TODO #class: turn function into a method of CardComponent
-  /* method CardComponent.equals */
-equals(card) {
-    return card._id === this._id;
-  };
-
-  // TODO #class: turn function into a method of CardComponent
-  /* CardComponent.get flipped() */
-      get prop() {
-        return this._flipped;
-      }
-}
-;
